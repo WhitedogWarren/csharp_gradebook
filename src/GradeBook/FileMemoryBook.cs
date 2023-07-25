@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using System.IO;
 
 namespace GradeBook
 {
@@ -7,22 +8,35 @@ namespace GradeBook
     {
         public FileMemoryBook(string author, string name, List<double> grades) : base(author, name)
         {
-            this.grades = grades;
+            using (var writer = File.AppendText($"{this.Name}.txt"))
+            {
+                grades.ForEach(grade => writer.WriteLine(grades));
+            }
         }
 
-        private List<double> grades;
+        
 
         public override List<double> GetGrades()
         {
-            return this.grades;
+            var stringList = File.ReadAllLines($"{this.Name}.txt");
+            var grades = new List<double>();
+            foreach ( var grade in stringList )
+            {
+                grades.Add( Convert.ToDouble(grade) );
+            }
+            return grades;
+            //$"{Name.txt}"
         }
 
         public override void AddGrade(double grade)
         {
             if (grade <= 100 && grade >= 0)
             {
-                Logger.Success($"Adding {grade} to book {Name}.");
-                grades.Add(grade);
+                Logger.Success($"Adding {grade} to book {this.Name}.");
+                using (var writer = File.AppendText($"{Name}.txt"))
+                {
+                    writer.WriteLine(grade);
+                }
                 if (GradeAdded != null)
                 {
                     GradeAdded(this, new EventArgs());
@@ -39,7 +53,7 @@ namespace GradeBook
         public double Highest()
         {
             var max = double.MinValue;
-            foreach (var grade in this.grades)
+            foreach (var grade in this.GetGrades())
             {
                 if (grade > max)
                 {
@@ -52,7 +66,7 @@ namespace GradeBook
         public double Lowest()
         {
             var min = double.MaxValue;
-            foreach (var grade in this.grades)
+            foreach (var grade in this.GetGrades())
             {
                 if (grade < min)
                 {
@@ -65,8 +79,9 @@ namespace GradeBook
         public double Avg()
         {
             var sum = 0.0;
-            foreach (var grade in this.grades) { sum += grade; };
-            return sum / this.grades.Count;
+            var grades = this.GetGrades();
+            foreach (var grade in grades) { sum += grade; };
+            return sum / grades.Count;
         }
 
         public override Statistics GetStatistics()

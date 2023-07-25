@@ -26,8 +26,8 @@ namespace GradeBook
             var bookName = $"{userName}'s book";
             bookName = SetBookName(bookName);
 
-            IBook book = new InnerMemoryBook(userName, bookName, new List<double>());
-            //var book = new FileMemoryBook(userName, bookName, new List<double>());
+            //IBook book = new InnerMemoryBook(userName, bookName, new List<double>());
+            IBook book = new FileMemoryBook(userName, bookName, new List<double>());
             book.GradeAdded += OnGradeAdded;
             Logger.Success($"Book {book.Name} created");
 
@@ -62,7 +62,7 @@ namespace GradeBook
 
         private static string SetBookName(string actualName)
         {
-            var newBookName = "";
+            var newBookName = actualName;
             string changeBookName;
             Logger.Write($"Your current book name is '{actualName}'");
             Logger.Write("Would you like to change it ?");
