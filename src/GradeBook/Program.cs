@@ -38,10 +38,19 @@ namespace GradeBook
 
             EnterGrades( book );
 
-            Logger.Success($"Statistics for {book.Name} of {book.Author}:");
-            Logger.Write($"Le plus haut score est de {book.GetStatistics().Highest} points");
-            Logger.Write($"Le plus petit score est de {book.GetStatistics().Lowest} points");
-            Logger.Write( $"Le score moyen est de {book.GetStatistics().Avg:N2} points");
+            if(book.GetGrades().Count > 0 )
+            {
+                Logger.Success($"Statistics for {book.Name} of {book.Author}:");
+                Logger.Write($"Le plus haut score est de {book.GetStatistics().Highest} points");
+                Logger.Write($"Le plus petit score est de {book.GetStatistics().Lowest} points");
+                Logger.Write($"Le score moyen est de {book.GetStatistics().Avg:N2} points");
+            }
+            else
+            {
+                Logger.Warn($"No grade in {book.Name}, can't compute statistics.");
+            }
+
+            
             
             // Currently deleting file at the end of Program.
             File.Delete($"{book.Name}.txt");
