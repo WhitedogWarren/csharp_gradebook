@@ -3,13 +3,26 @@ using System.Collections.Generic;
 
 namespace GradeBook
 {
+    public interface IBook
+    {
+        string Name { get; }
+        //readonly string author;
+        List<double> GetGrades();
+        void AddGrade(double grade);
+        Statistics GetStatistics();
+        event GradeAddedDelegate GradeAdded;
+    }
+    
     public delegate void GradeAddedDelegate(object sender, EventArgs args);
 
-    public abstract class BookBase : NamedObject
+    public abstract class BookBase : NamedObject, IBook
     {
         public BookBase(string name) : base(name) { }
         public abstract void AddGrade(double grade);
         public abstract List<double> GetGrades();
+        public abstract Statistics GetStatistics();
+        public virtual event GradeAddedDelegate GradeAdded;
+
     }
 
     public class InnerMemoryBook : BookBase
@@ -37,7 +50,7 @@ namespace GradeBook
             }
         }
 
-        public event GradeAddedDelegate GradeAdded;
+        public override event GradeAddedDelegate GradeAdded;
 
         public double Highest()
         {
@@ -72,7 +85,7 @@ namespace GradeBook
             return sum / this.grades.Count;
         }
 
-        public Statistics GetStatistics()
+        public override Statistics GetStatistics()
         {
             var result = new Statistics();
             result.Highest = this.Highest();

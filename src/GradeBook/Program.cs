@@ -81,7 +81,7 @@ namespace GradeBook
             Logger.Write( $"Le score moyen est de {book.GetStatistics().Avg:N2} points");
         }
 
-        private static void EnterGrades(BookBase book)
+        private static void EnterGrades(IBook book)
         {
             Logger.Write("Enter a grade ( write 'q' to end ) :");
             var isOver = false;
