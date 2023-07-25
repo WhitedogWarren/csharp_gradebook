@@ -4,7 +4,7 @@ namespace GradeBook
     {
         public NamedObject(string name)
         {
-            Name = name;
+            this.name = name;
         }
         private string name;
         public string Name

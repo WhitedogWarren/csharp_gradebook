@@ -11,74 +11,92 @@ namespace GradeBook
             Console.Clear();
             Console.Title = "GradeBook";
 
-            string nameValue;
-            nameValue = args.Length == 0 ? "you" : args[0];
-            Logger.Write($"hello, {nameValue} !");
+            string userName;
+            userName = args.Length == 0 ? "you" : args[0];
+            Logger.Write($"hello, {userName} !");
+
 
             if (args.Length == 0 )
             {
-                var isGoodName = false;
-                do
-                {
-                    Logger.Write("What's your name ?");
-                    var nameInput = Console.ReadLine();
-                    if(nameInput == "")
-                    {
-                        Logger.Error("Your name can't be empty");
-                    }
-                    else
-                    {
-                        isGoodName = true;
-                        nameValue = nameInput;
-                    }
-                } while(!isGoodName);
+                userName = SetUserName();
             }
-            Console.Title = $"{nameValue}'s GradeBook";
+            
+            Console.Title = $"{userName}'s GradeBook";
 
-            var bookName = $"{nameValue}'s book";
-            Logger.Write($"Your current book name is '{bookName}'");
-            Logger.Write("Would you like to change it ?");
-            string changeBookName;
-            do
-            {
-                Logger.Write("y/n ?");
-                changeBookName = Console.ReadLine();
-                if(!changeBookName.Equals("y") && !changeBookName.Equals("Y") && !changeBookName.Equals("n") & !changeBookName.Equals("N"))
-                {
-                    Logger.Error("Invalid answer !");
-                }
-            } while (!changeBookName.Equals("y") && !changeBookName.Equals("Y") && !changeBookName.Equals("n") && !changeBookName.Equals("N"));
+            var bookName = $"{userName}'s book";
+            bookName = SetBookName(bookName);
 
-            if(changeBookName.Equals("y") || changeBookName.Equals("Y"))
-            {
-                
-                var isGoodName = false;
-                do
-                {
-                    Logger.Write("Enter your book name :");
-                    var bookNameInput = Console.ReadLine();
-                    if(bookNameInput == "")
-                    {
-                        Logger.Error("Book name can't be empty !");
-                    }
-                    else
-                    {
-                        bookName = bookNameInput;
-                        isGoodName = true;
-                    }
-                } while (!isGoodName);
-            }
-
-            var book = new InnerMemoryBook(nameValue, bookName, new List<double>());
+            IBook book = new InnerMemoryBook(userName, bookName, new List<double>());
+            //var book = new FileMemoryBook(userName, bookName, new List<double>());
             book.GradeAdded += OnGradeAdded;
             Logger.Success($"Book {book.Name} created");
 
             EnterGrades( book );
 
-            Logger.Success($"Statistics for {book.Name} of {book.author}:");
+            Logger.Success($"Statistics for {book.Name} of {book.Author}:");
             Logger.Write($"Le plus haut score est de {book.GetStatistics().Highest} points");
             Logger.Write($"Le plus petit score est de {book.GetStatistics().Lowest} points");
             Logger.Write( $"Le score moyen est de {book.GetStatistics().Avg:N2} points");
+        }
+
+        private static string SetUserName()
+        {
+            var isGoodName = false;
+            var userName = "";
+            do
+            {
+                Logger.Write("What's your name ?");
+                var nameInput = Console.ReadLine();
+                if (nameInput == "")
+                {
+                    Logger.Error("Your name can't be empty");
+                }
+                else
+                {
+                    isGoodName = true;
+                    userName = nameInput;
+                }
+            } while (!isGoodName);
+            return userName;
+        }
+
+        private static string SetBookName(string actualName)
+        {
+            var newBookName = "";
+            string changeBookName;
+            Logger.Write($"Your current book name is '{actualName}'");
+            Logger.Write("Would you like to change it ?");
+            
+            do
+            {
+                Logger.Write("y/n ?");
+                changeBookName = Console.ReadLine();
+                if (!changeBookName.Equals("y") && !changeBookName.Equals("Y") && !changeBookName.Equals("n") & !changeBookName.Equals("N"))
+                {
+                    Logger.Error("Invalid answer !");
+                }
+            } while (!changeBookName.Equals("y") && !changeBookName.Equals("Y") && !changeBookName.Equals("n") && !changeBookName.Equals("N"));
+
+            if (changeBookName.Equals("y") || changeBookName.Equals("Y"))
+            {
+
+                var isGoodName = false;
+                do
+                {
+                    Logger.Write("Enter your book name :");
+                    var bookNameInput = Console.ReadLine();
+                    if (bookNameInput == "")
+                    {
+                        Logger.Error("Book name can't be empty !");
+                    }
+                    else
+                    {
+                        newBookName = bookNameInput;
+                        isGoodName = true;
+                    }
+                } while (!isGoodName);
+            }
+            return newBookName;
         }
 
         private static void EnterGrades(IBook book)
