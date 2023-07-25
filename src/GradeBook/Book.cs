@@ -13,7 +13,7 @@ namespace GradeBook
         event GradeAddedDelegate GradeAdded;
     }
     
-    public delegate void GradeAddedDelegate(object sender, EventArgs args);
+    public delegate void GradeAddedDelegate(object sender, GradeAddedEventArgs args);
 
     public abstract class BookBase : NamedObject, IBook
     {

@@ -26,8 +26,13 @@ namespace GradeBook
             var bookName = $"{userName}'s book";
             bookName = SetBookName(bookName);
 
+            //InnerMemoryBook stores data in a class field
             //IBook book = new InnerMemoryBook(userName, bookName, new List<double>());
+
+            //FileMemoryBook stores data in a file
             IBook book = new FileMemoryBook(userName, bookName, new List<double>());
+
+
             book.GradeAdded += OnGradeAdded;
             Logger.Success($"Book {book.Name} created");
 
@@ -37,6 +42,10 @@ namespace GradeBook
             Logger.Write($"Le plus haut score est de {book.GetStatistics().Highest} points");
             Logger.Write($"Le plus petit score est de {book.GetStatistics().Lowest} points");
             Logger.Write( $"Le score moyen est de {book.GetStatistics().Avg:N2} points");
+            
+            // Currently deleting file at the end of Program.
+            File.Delete($"{book.Name}.txt");
+
         }
 
         private static string SetUserName()
@@ -146,10 +155,9 @@ namespace GradeBook
             Logger.Write($"Grades : {listOutput}");
         }
 
-        static void OnGradeAdded(object sender, EventArgs e)
+        static void OnGradeAdded(object sender, GradeAddedEventArgs e)
         {
-            Logger.Write("A grade was added");
-            
+            Logger.Warn($"Grade {e.Grade.ToString()} was added to {e.Book}");
         }
     }
 }

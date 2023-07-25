@@ -21,11 +21,11 @@ namespace GradeBook
         {
             if (grade <= 100 && grade >= 0)
             {
-                Logger.Success($"Adding {grade} to book {Name}.");
+                Logger.Success($"Adding {grade} to book {this.Name}.");
                 grades.Add(grade);
                 if (GradeAdded != null)
                 {
-                    GradeAdded(this, new EventArgs());
+                    GradeAdded(this, new GradeAddedEventArgs(this.Name, grade));
                 }
             }
             else

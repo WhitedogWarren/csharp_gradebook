@@ -25,7 +25,6 @@ namespace GradeBook
                 grades.Add( Convert.ToDouble(grade) );
             }
             return grades;
-            //$"{Name.txt}"
         }
 
         public override void AddGrade(double grade)
@@ -36,11 +35,12 @@ namespace GradeBook
                 using (var writer = File.AppendText($"{Name}.txt"))
                 {
                     writer.WriteLine(grade);
+                    if (GradeAdded != null)
+                    {
+                        GradeAdded(this, new GradeAddedEventArgs(this.Name, grade));
+                    }
                 }
-                if (GradeAdded != null)
-                {
-                    GradeAdded(this, new EventArgs());
-                }
+                
             }
             else
             {

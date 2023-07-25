@@ -16,7 +16,7 @@ namespace GradeBook
             Console.ResetColor();
         }
 
-        public static void warn(string message)
+        public static void Warn(string message)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(message);
